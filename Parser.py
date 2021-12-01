@@ -298,7 +298,6 @@ def block():
     global s
     if not s:
         error()
-        s = ""
         return
 
     if len(s) < 2:
@@ -311,24 +310,25 @@ def block():
 
     if s[0] != "{":
         error()
-        s = []
+        s = ""
         return
+
     s.pop(0)
-
-    if not s:
-        error()
-        return
-
-    while s and s[0] != ";":
+    while len(s) >= 2 and s[1] != ";":
         statement()
 
-    if not s:
-        return
-    if s[0] != ";":
+    if len(s) < 2:
         error()
-        s = []
+        s = ""
         return
-    return
+
+    elif s[0] == "}" and s[1] == ";":
+        return
+
+    else:
+        error()
+        s = ""
+        return
 
 
 # <assign> --> id = < term >
