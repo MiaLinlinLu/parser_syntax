@@ -1,8 +1,12 @@
 VOID MAIN () {
-    a=b+10
-    c = dd
-    if (a<b){
-        c=10
+    switch (a){
+        10:{c=10-4};
+        13:{aa=1};
+        a:{c=c*901};
+    };
+    foreach (a b){
+        c=dd
+        a=0+3
     };
 };
 
