@@ -4,13 +4,12 @@
 
 
 # if there is lexical error,
-# it will print "ERROR DETECTED".
+# it will print analzed TOKENS and "LEXICAL ERROR DETECTED".
 
 # If there is no lexical error,
-# tokens obtained from lexical parser will be printed to the terminal.
-# Then,
-# if no syntax error, nothing will print furthermore.
-# if there is syntax error, "Error Detected" will be printed to the terminal.
+# it will print TOKENs
+# if no syntax error, "No Syntax Error"
+# if syntax error, "Error Detected"
 
 ######################################################################################################
 """
@@ -153,6 +152,10 @@ key_words_dic = {
 }
 
 
+def lexical_error():
+    print("LEXICAL ERROR DETECTED.")
+
+
 def lexical_parse(s):
     """
     return RESULT:[] --> a list of tokens.
@@ -190,7 +193,11 @@ def lexical_parse(s):
             elif is_valid_identifier(subs) and not isDelimiter(s[right - 1]):
                 result.append("ID")
             else:
-                error()
+                print("\nThe analyzed tokens are: \n")
+                print(result)
+                print("\n")
+                lexical_error()
+                print("\n")
                 return
             left = right
 
@@ -299,12 +306,11 @@ def block():
     if not s:
         error()
         return
-
-    if len(s) < 2:
+    if len(s) < 3:
         error()
         return
 
-    if s == "{}":
+    if s == "{};":
         s = ""
         return
 
@@ -314,17 +320,22 @@ def block():
         return
 
     s.pop(0)
-    while len(s) >= 2 and s[1] != ";":
+    while s and s[0] != "}":
         statement()
 
-    if len(s) < 2:
+    if not s:
+        error()
+        return
+
+    if len(s) == 1:
         error()
         s = ""
         return
 
-    elif s[0] == "}" and s[1] == ";":
+    if s[0] == "}" and s[1] == ";":
+        s.pop(0)
+        s.pop(0)
         return
-
     else:
         error()
         s = ""
@@ -474,11 +485,12 @@ def ifstmt():
             return
         s.pop(0)
         block()
-        if not s:
-            return
-        if s[0] == "ELSE_CODE":
-            s.pop(0)
-            block()
+        if s:
+            if s[0] != "ELSE_CODE":
+                return
+            if s[0] == "ELSE_CODE":
+                s.pop(0)
+                block()
 
 
 def dowhilestmt():
@@ -550,9 +562,7 @@ def statement():
 
 
 def syntax_parse():
-    global flag
     program()
-    flag = 0
 
 
 def program():
@@ -575,7 +585,6 @@ def program():
 # Main Program
 f = open("program.txt", "r")
 s = lexical_parse(f.read())
-global flag
 syntax_flag = 1
 syntax_parse()
 if syntax_flag:

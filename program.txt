@@ -1,5 +1,9 @@
 VOID MAIN () {
-    a=b+10;
+    a=b+10
+    c = dd
+    if (a<b){
+        c=10
+    };
 };
 
 
