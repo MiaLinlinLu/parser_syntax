@@ -4,14 +4,18 @@
 
 
 # if there is lexical error,
-# it will print "ERROR DETECTED".
+# it will print analzed TOKENS and "LEXICAL ERROR DETECTED".
 
 # If there is no lexical error,
-# tokens obtained from lexical parser will be printed to the terminal.
-# Then,
-# if no syntax error, nothing will print furthermore.
-# if there is syntax error, "Error Detected" will be printed to the terminal.
+# it will print TOKENs
+# if no syntax error, "No Syntax Error"
+# if syntax error, "Error Detected"
 
+# Tested functions:
+# while,if,for,foreach,term,factor,return,bool,dowhile
+
+# to test:
+# switch
 ######################################################################################################
 """
 lexical analyzer 
@@ -19,7 +23,7 @@ lexical analyzer
 
 # define DELIMITER
 def isDelimiter(ch):
-    this_s = " +-=*/><(){;}=%"
+    this_s = " +-=*/><(:){;}=%"
     if ch in list(this_s) + ["\t", "\n"]:
         return True
     return False
@@ -78,7 +82,8 @@ def is_integer(s):
         return False
     this_s1 = "123456789"
     this_s = "0123456789"
-
+    if s == "0":
+        return True
     # Other numbers
     if s[0] in list(this_s1):
         if len(s) > 1:
@@ -132,7 +137,8 @@ elements = [
     "BOOL_OPERATOR",
     "SWITCH_CODE",
     "CASE_CODE",
-    "FOREACH_CODE" "RETURN_CODE",
+    "FOREACH_CODE",
+    "RETURN_CODE",
     "DO_CODE",
     "WHILE_CODE",
     "VOIDMAIN_CODE",
@@ -151,6 +157,10 @@ key_words_dic = {
     "VOID": "VOID_CODE",
     "MAIN": "MAIN_CODE",
 }
+
+
+def lexical_error():
+    print("LEXICAL ERROR DETECTED.")
 
 
 def lexical_parse(s):
@@ -190,8 +200,12 @@ def lexical_parse(s):
             elif is_valid_identifier(subs) and not isDelimiter(s[right - 1]):
                 result.append("ID")
             else:
-                error()
-                return
+                print("\nThe analyzed tokens are: \n")
+                print(result)
+                print("\n")
+                print("{} could not be identified\n".format(subs))
+                lexical_error()
+                return 0
             left = right
 
     print("\n\nThe tokens are: \n")
@@ -207,6 +221,7 @@ Syntax analyzer
 
 
 def switchstmt():
+    print("ENTER <switchstmt>\n")
     global s
     s.pop(0)
     if not s or s[0] != "(":
@@ -229,15 +244,32 @@ def switchstmt():
         return
     s.pop(0)
 
-    casestmt()
-    if not s or s[0] != "}":
+    while s and s[0] != "}":
+        casestmt()
+
+    if not s:
         error()
         return
-    s.pop(0)
+
+    if len(s) == 1:
+        error()
+        s = ""
+        return
+
+    if s[0] == "}" and s[1] == ";":
+        s.pop(0)
+        s.pop(0)
+        print("EXIT <switchstmt>\n")
+        return
+    else:
+        error()
+        s = ""
+        return
 
 
 def casestmt():
     global s
+    print("ENTER <casestmt>\n")
     if not s:
         error()
         return
@@ -245,16 +277,16 @@ def casestmt():
         s.pop(0)
 
     factor()
-    if not s:
+    if not s or s[0] != ":":
+        error()
         return
-    if s[0] == ":":
-        s.pop(0)
-    if not s:
-        return
+    s.pop(0)
     block()
+    print("EXIT <casestmt>\n")
 
 
 def foreachstmt():
+    print("ENTER <foreachstmt>\n")
     global s
     s.pop(0)
 
@@ -267,45 +299,36 @@ def foreachstmt():
         error()
         return
     s.pop(0)
-    if not s:
-        return
 
-    if s[0] != ";":
+    if not s or s[0] != "ID":
         error()
         return
     s.pop(0)
-    if not s:
-        return
 
-    if s[0] != "ID":
-        error()
-        return
-    s.pop(0)
-    if not s:
-        return
-
-    if s[0] != ")":
+    if not s or s[0] != ")":
         error()
         return
     s.pop(0)
     block()
+    print("EXIT <foreachstmt>\n")
 
 
 def block():
     """
          <block> --> "{" {<statement>} "}" “;”
     """
+    print("Enter <block>\n")
     global s
     if not s:
         error()
         return
-
-    if len(s) < 2:
+    if len(s) < 3:
         error()
         return
 
-    if s == "{}":
+    if s == "{};":
         s = ""
+        print("EXIT <block>\n")
         return
 
     if s[0] != "{":
@@ -314,17 +337,23 @@ def block():
         return
 
     s.pop(0)
-    while len(s) >= 2 and s[1] != ";":
+    while s and s[0] != "}":
         statement()
 
-    if len(s) < 2:
+    if not s:
+        error()
+        return
+
+    if len(s) == 1:
         error()
         s = ""
         return
 
-    elif s[0] == "}" and s[1] == ";":
+    if s[0] == "}" and s[1] == ";":
+        s.pop(0)
+        s.pop(0)
+        print("EXIT <block>\n")
         return
-
     else:
         error()
         s = ""
@@ -335,12 +364,14 @@ def block():
 # <term> --> <factor> { (+/-/*|/|%) <factor> }
 # <factor> --> identifier | int | float
 def factor():
+    print("ENTER <factor>\n")
     global s
     if not s:
         error()
         return
     if s[0] in ["ID", "INTEGER", "FLOAT"]:
         s.pop(0)
+        print("EXIT <factor>\n")
         return
     else:
         error()
@@ -348,6 +379,7 @@ def factor():
 
 
 def term():
+    print("ENTER <term>\n")
     global s
     factor()
     if s and s[0] != "MATH_OPERATOR":
@@ -361,9 +393,11 @@ def term():
         return
     s.pop(0)
     factor()
+    print("EXIT <term>\n")
 
 
 def assign():
+    print("ENTER <assign>\n")
     global s
     if not s:
         return
@@ -382,9 +416,11 @@ def assign():
     if not s:
         return
     term()
+    print("EXIT <assign>\n")
 
 
 def boolstmt():
+    print("ENTER <boolstmt>\n")
     global s
     if len(s) < 3:
         error()
@@ -398,8 +434,7 @@ def boolstmt():
         s.pop(0)
         s.pop(0)
         s.pop(0)
-        if not s:
-            return
+        print("EXIT <boolstmt>\n")
         return
     else:
         error()
@@ -407,20 +442,20 @@ def boolstmt():
 
 
 def whilestmt():
+    print("ENTER <whilestmt>\n")
     global s
     s.pop(0)
-    if not s:
-        error()
-        return
-    if s[0] != "(":
+    if not s or s[0] != "(":
         error()
         return
     s.pop(0)
+
     if not s:
         error()
         return
+
     boolstmt()
-    if s[0] != ")":
+    if not s or s[0] != ")":
         error()
         return
     s.pop(0)
@@ -428,15 +463,18 @@ def whilestmt():
         error()
         return
     block()
+    print("EXIT <whilestmt>\n")
 
 
 def forstmt():
+    print("ENTER <forstmt>\n")
     global s
     s.pop(0)
 
     if not s or s[0] != "(":
         error()
         return
+
     s.pop(0)  # (
     if not s or s[0] != "ID":
         error()
@@ -458,9 +496,11 @@ def forstmt():
         return
     s.pop(0)  # )
     block()
+    print("EXIT <forstmt>\n")
 
 
 def ifstmt():
+    print("ENTER <ifstmt>\n")
     global s
     if s[0] == "IF_CODE":
         s.pop(0)
@@ -474,18 +514,18 @@ def ifstmt():
             return
         s.pop(0)
         block()
-        if not s:
-            return
-        if s[0] == "ELSE_CODE":
-            s.pop(0)
-            block()
+        if s:
+            if s[0] != "ELSE_CODE":
+                return
+            if s[0] == "ELSE_CODE":
+                s.pop(0)
+                block()
+    print("EXIT <ifstmt>\n")
 
 
 def dowhilestmt():
+    print("ENTER <dowhile>\n")
     global s
-    if s[0] != "DO_CODE":
-        error()
-        return
     s.pop(0)
     block()
     if not s or s[0] != "WHILE_CODE":
@@ -497,15 +537,20 @@ def dowhilestmt():
         error()
         return
     s.pop(0)
+    if not s:
+        error()
+        return
     boolstmt()
     if not s or s[0] != ")":
         error()
         return
     s.pop(0)
+    print("EXIT <dowhile>\n")
     return
 
 
 def returnstmt():
+    print("ENTER <returnstmt>\n")
     global s
     if s[0] != "RETURN_CODE":
         error()
@@ -516,6 +561,7 @@ def returnstmt():
         error()
         return
     factor()
+    print("EXIT <returnstmt>\n")
 
 
 def error():
@@ -550,14 +596,14 @@ def statement():
 
 
 def syntax_parse():
-    global flag
     program()
-    flag = 0
 
 
 def program():
+    print("Enter <program>\n")
     global s
     if not s:
+        print("Exit <program>\n")
         return
     if len(s) < 5:  # do not have enough length for a program.
         error()
@@ -569,14 +615,15 @@ def program():
             return
     s = s[4:]
     block()
+    print("Exit <program>\n")
 
 
 ######################################################################################################
 # Main Program
 f = open("program.txt", "r")
 s = lexical_parse(f.read())
-global flag
-syntax_flag = 1
-syntax_parse()
-if syntax_flag:
-    print("No Syntax Error Detected.")
+if s:
+    syntax_flag = 1
+    syntax_parse()
+    if syntax_flag:
+        print("No Syntax Error Detected.")
