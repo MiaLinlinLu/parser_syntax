@@ -4,7 +4,7 @@ Lexical Parser and Syntactical Parser.
 
 # Grammars used
 
--   <program> --> VOID MAIN "(" ")" <block>
+-   .<program> --> VOID MAIN "(" ")" <block>
 -   <block> --> "{" {<statement>} "}" “;”
 -   <assign> --> id = < term>
 -   <term> --> <factor> { ( + | - | * | / | %) <factor> }
