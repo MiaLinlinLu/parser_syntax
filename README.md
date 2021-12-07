@@ -1,4 +1,4 @@
-# parsetree
+# Parsetree
 
 Lexical Parser and Syntactical Parser.
 
