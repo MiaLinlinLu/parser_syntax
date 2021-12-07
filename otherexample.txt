@@ -1,0 +1,25 @@
+VOID MAIN () {
+    Int a 
+    Float b
+    if c==a:
+        c=dd+5.67
+    
+    switch (a)=> Int {
+        10:{c=10-4};
+        13:{aa=1};
+        a:{c=c*901};
+    };
+    foreach (a b)=>Float{
+        c=dd
+        a=0+3
+    };
+
+        c = b + 9
+
+    Class a {
+        def bb():
+            c = d
+    };
+    c = a()
+
+};
