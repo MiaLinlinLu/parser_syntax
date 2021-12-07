@@ -1,16 +1,37 @@
 VOID MAIN () {
-    switch (a){
-        10:{c=10-4};
-        13:{aa=1};
-        a:{c=c*901};
+    Int a 
+    a = 0
+    Float *b
+    Bool m
+    static Float mm
+    m = a>a+3*4
+    m = 3<4+5
+    String ss
+    ss = 'hello'
+    String s2
+    s2 = ''
+    String s3
+    s3 = ''
+    Class CAT {
+        Int e 
+        Float *gg
+        Bool mf
+        def static bb2()=> VOID {
+            Int c
+            c = *b
+            CAT var
+            return
+        };
+        def fun2()=> CAT {
+            Int g
+            c = *b
+            CAT var3
+            return var
+        };
+        return 
     };
-    foreach (a b){
-        c=dd
-        a=0+3
-    };
+    return
 };
-
-
     
     
 

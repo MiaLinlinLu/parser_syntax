@@ -1,8 +1,6 @@
 ######################################################################################################
 ###  Usage.
 # read from "program.txt",
-
-
 # if there is lexical error,
 # it will print analzed TOKENS and "LEXICAL ERROR DETECTED".
 
@@ -14,20 +12,55 @@
 # Tested functions:
 # while,if,for,foreach,term,factor,return,bool,dowhile
 
-# to test:
-# switch
+
 ######################################################################################################
+# grammars:
+# <program>    ->  VOID MAIN () <block> ";"
+# <block>      ->'{' {<statement>}  <returnstmt> '}'
+# <classdef>   ->  Class <ID> '{'{<function>|<statement>} '}'   
+# <function>   ->  def <ID> '('  {<assign>|<factor>}  ')' '=>' <Type> '{' <block> return <factor>  '}'   #type(<Type>)==type(<factor>)
+# <statement>   --> <staticvar> | <declarevar> |  <assign> |  <classdef> | <function>
+# <returntypes>  --> 'Int'|'String'|'VOID'|'Float'|<Class>
+# <returnstmt> --> return {<factor>}
+
+# <assign>    --> <ID> = <term> | <boolstmt>
+# <term>      --> <factor> { ( '+' | '-' | '*' | '/' | '%') <factor> }
+# <factor>    --> identifier | int | float | <varDeref>
+# <boolstmt>   --> TRUE_CODE | FALSE_CODE | (<term> (">"|"<"|"==") <term>)
+
+# <String>       -->  ''  //using single quotes
+# <int>          -->  0| ((1|2|3|4|5|6|7|8|9){0|1|2|3|4|5|6|7|8|9})
+# <Float>        --> <int>"."<int>
+
+# <varDeref>     --> '*'<ID>
+# <staticvar>  ->  static <declarevar> 
+# <declarevar> ->  <Types> <ID>
+# <voidtype>   ->  <VOID> 
+ 
+
+'''
+define lists/dics.
+'''
+type_dic = {}    # {id:type}
+static_vars = [] # [id]
+class_vars = []  #[class1,class2,...]
+
+
 """
 lexical analyzer 
 """
 
 # define DELIMITER
 def isDelimiter(ch):
-    this_s = " +-=*/><(:){;}=%"
+    this_s = " +-=*/><(:){;}=%'"
     if ch in list(this_s) + ["\t", "\n"]:
         return True
     return False
 
+def isString(ch):
+    if ch[0]=="'" and ch[-1]=="'":
+        return True
+    return False
 
 # define OPERATOR
 def isMathOperator(ch):
@@ -50,30 +83,6 @@ def is_valid_identifier(s):
     if s[0] in list(this_s):
         return False
     return True
-
-
-# OCTAL NUMBERS
-def is_octal(s):
-    if not s:
-        return False
-    if len(s) > 1 and s[0] == "0":
-        for digit in s[1:]:
-            if digit not in ["0", "1", "2", "3", "4", "5", "6", "7"]:
-                return False
-        return True
-    return False
-
-
-# HEX NUMBERS
-def is_hex(s):
-    this_s = "0123456789abcdefABCDEF"
-    if len(s) > 2:
-        if s[:2] in ["0X", "0x"]:
-            for digit in s[2:]:
-                if digit not in list(this_s):
-                    return False
-            return True
-    return False
 
 
 # INTEGER
@@ -122,28 +131,6 @@ def is_float(s):
 
 
 # PARSING STRING
-elements = [
-    "(",
-    ")",
-    "{",
-    "}",
-    ";",
-    "=",
-    "IF_CODE",
-    "ELSE_CODE",
-    "FLOAT",
-    "INTEGER",
-    "MATH_OPERATOR",
-    "BOOL_OPERATOR",
-    "SWITCH_CODE",
-    "CASE_CODE",
-    "FOREACH_CODE",
-    "RETURN_CODE",
-    "DO_CODE",
-    "WHILE_CODE",
-    "VOIDMAIN_CODE",
-]
-
 key_words_dic = {
     "if": "IF_CODE",
     "else": "ELSE_CODE",
@@ -156,6 +143,10 @@ key_words_dic = {
     "while": "WHILE_CODE",
     "VOID": "VOID_CODE",
     "MAIN": "MAIN_CODE",
+    "Class":"CLASS_CODE",
+    "def":"DEF_CODE",
+    "true":"TRUE_CODE",
+    "false":"FALSE_CODE"
 }
 
 
@@ -182,9 +173,29 @@ def lexical_parse(s):
                 if isMathOperator(s[right]):
                     result.append("MATH_OPERATOR")
                 elif isBoolOperator(s[right]):
-                    result.append("BOOL_OPERATOR")
+                    if result and result[-1]=='=':
+                        result[-1] = '=>'
+                    else:
+                        result.append("BOOL_OPERATOR")
                 else:
-                    result.append(s[right])
+                    if s[right]=='=':
+                        if result and result[-1]=='=':
+                            result[-1]= 'BOOL_OPERATOR'
+                        else:
+                            result.append('=')
+                    elif s[right]=="'":
+                        right += 1
+                        left += 1
+                        while right<n and s[right]!="'":
+                            right += 1
+                            left += 1
+                        if right==n:
+                            lexical_error()
+                            print("Need an ' for the string.")
+                            return 
+                        result.append('STRING')
+                    else:
+                        result.append(s[right])
             right += 1
             left += 1
 
@@ -198,7 +209,16 @@ def lexical_parse(s):
             elif is_float(subs):
                 result.append("FLOAT")
             elif is_valid_identifier(subs) and not isDelimiter(s[right - 1]):
-                result.append("ID")
+                if left>0 and s[left-1]=='*':
+                    result[-1]= "varDeref"
+                    result.append('ID')
+                    result.append(subs)
+                else:
+                    if subs in ['Int','Float','String','VOID','Bool','static']:
+                        result.append(subs)
+                    else:
+                        result.append("ID")
+                        result.append(subs)
             else:
                 print("\nThe analyzed tokens are: \n")
                 print(result)
@@ -219,181 +239,182 @@ def lexical_parse(s):
 Syntax analyzer 
 """
 
-
-def switchstmt():
-    print("ENTER <switchstmt>\n")
-    global s
-    s.pop(0)
-    if not s or s[0] != "(":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != "ID":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != ")":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != "{":
-        error()
-        return
-    s.pop(0)
-
-    while s and s[0] != "}":
-        casestmt()
-
-    if not s:
-        error()
-        return
-
-    if len(s) == 1:
-        error()
-        s = ""
-        return
-
-    if s[0] == "}" and s[1] == ";":
-        s.pop(0)
-        s.pop(0)
-        print("EXIT <switchstmt>\n")
-        return
-    else:
-        error()
-        s = ""
-        return
-
-
-def casestmt():
-    global s
-    print("ENTER <casestmt>\n")
-    if not s:
-        error()
-        return
-    if s[0] == "CASE_CODE":
-        s.pop(0)
-
-    factor()
-    if not s or s[0] != ":":
-        error()
-        return
-    s.pop(0)
-    block()
-    print("EXIT <casestmt>\n")
-
-
-def foreachstmt():
-    print("ENTER <foreachstmt>\n")
-    global s
-    s.pop(0)
-
-    if not s or s[0] != "(":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != "ID":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != "ID":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != ")":
-        error()
-        return
-    s.pop(0)
-    block()
-    print("EXIT <foreachstmt>\n")
-
-
-def block():
+def block(return_type=None):
     """
          <block> --> "{" {<statement>} "}" “;”
     """
     print("Enter <block>\n")
     global s
-    if not s:
+    if (not s) or (s[0] != "{"):
         error()
         return
-    if len(s) < 3:
-        error()
-        return
-
-    if s == "{};":
-        s = ""
-        print("EXIT <block>\n")
-        return
-
-    if s[0] != "{":
-        error()
-        s = ""
-        return
-
     s.pop(0)
-    while s and s[0] != "}":
+    while s and (s[0] not in ["}","RETURN_CODE"]):
         statement()
 
-    if not s:
-        error()
-        return
+    returnstmt(return_type = return_type)
 
-    if len(s) == 1:
-        error()
-        s = ""
-        return
-
-    if s[0] == "}" and s[1] == ";":
+    if len(s)>=2 and s[0]=='}' and s[1]==";":
         s.pop(0)
         s.pop(0)
         print("EXIT <block>\n")
         return
     else:
         error()
-        s = ""
         return
-
 
 # <assign> --> id = < term >
 # <term> --> <factor> { (+/-/*|/|%) <factor> }
 # <factor> --> identifier | int | float
-def factor():
+def factor(return_type=None):
     print("ENTER <factor>\n")
     global s
     if not s:
         error()
         return
-    if s[0] in ["ID", "INTEGER", "FLOAT"]:
-        s.pop(0)
-        print("EXIT <factor>\n")
+    if not return_type:
+        print('\n\n\n\n\n\n\n')
+        print(s[0])
+        if s[0] in ["INTEGER", "FLOAT","STRING","BOOL"]:
+            print("EXIT <factor>\n")
+            s.pop(0)
+            return  
+        elif s[0]=='ID' and s[1] in type_dic:
+            print("EXIT <factor>\n")
+            s.pop(0)
+            s.pop(0)
+            return  
+        elif s[0]=='varDeref' and s[2] in type_dic:
+            print("EXIT <factor>\n")
+            s.pop(0)
+            s.pop(0)
+            s.pop(0)
+            return            
+        error()
+        print("wrong type of factor")
         return
     else:
+        if s[0]=='ID' and s[1] in type_dic:
+            this_type = type_dic[s[1]]
+            s.pop(0)
+            s.pop(0)
+        elif s[0]=="varDeref":
+            if s[2] in type_dic:
+                this_type = type_dic[s[2]]
+                s.pop(0)
+                s.pop(0)
+                s.pop(0)
+            else:
+                print("undefined ID name:{}".format(s[2]))
+                error()
+                return
+        elif s[0]=="INTEGER":
+            this_type = 'Int'
+            s.pop(0)
+        elif s[0]=="FLOAT":
+            this_type = 'Float'
+            s.pop(0)
+        elif s[0]=='BOOL':
+            this_type = 'Bool'
+            s.pop(0)
+        elif s[0]=='STRING':
+            this_type = 'String'
+            s.pop(0)
+        else:
+            error()
+            print("undefined type.")
+            return
+        if return_type==this_type:
+                print("EXIT <factor>\n")
+                return
+        else:
+            print("wrong return type")
+            error()
+            return
+    #     else:
+    #         print("EXIT <factor>\n")
+    #         return 
+    # elif s[0]=='ID':
+    #     if s[1] not in type_dic:
+    #         print("undefined ID: {}".format(s[1]))
+    #         error()
+    #         return 
+    #     else:
+    #         if return_type:
+    #             if type_dic[s[1]]==return_type:
+    #                 s.pop(0)
+    #                 s.pop(0)
+    #                 print("EXIT <factor>\n")
+    #                 return               
+    #             else:
+    #                 print("The return type should be {}, not {}".format(return_type,type_dic[s[1]]))
+    #                 error()
+    #                 return    
+    #         else:
+    #             s.pop(0)
+    #             s.pop(0)
+    #             print("EXIT <factor>\n")
+    #             return       
+    # else:
+    #     print('Invalid factor')
+    #     error()
+    #     return
+
+# <staticvar>  ->  static <declarevar> 
+# <declarevar> ->  <Types> <ID>
+# <voidtype>   ->  <VOID> 
+def declarevar():
+    print("ENTER <declarevar>\n")
+    global s
+    if not s:
         error()
         return
+    # type code
+    if s[0] in ['Int','Float','VOID_CODE','String','Bool']:
+        new_type = s[0]
+        s.pop(0)
+    # 
+    elif s[0]=='ID' and s[1] in class_vars:
+        new_type = s[1]
+        s.pop(0)
+        s.pop(0)
+    else:
+        error()
+        print('wrong type,type does not exist')
+        return
+    # id
+    if not s or s[0] not in ['ID','varDeref']:
+        print("ID required")
+        error()
+        return
+    if s[0]=='varDeref':
+        s.pop(0)
+    new_id = s[1]
+    s.pop(0)
+    s.pop(0)
+    if new_id in type_dic:
+        error()
+        print("ID: {} cannot be declared twice!\n".format(new_id))
+        return
+    type_dic[new_id] = new_type
+    print("EXIT <declarevar>\n")
+    return 
 
-
+# term: factor | factor +-*/% factor
 def term():
     print("ENTER <term>\n")
     global s
-    factor()
-    if s and s[0] != "MATH_OPERATOR":
-        return
-    if len(s) < 3:
+    if not s:
         error()
+        print("there should be at least one factor here.")
         return
+    factor()
+    while s and s[0]=='MATH_OPERATOR':
+        s.pop(0)
+        factor()
     if not s or s[0] != "MATH_OPERATOR":
-        error()
-        s = ""
+        print("EXIT <term>\n")
         return
-    s.pop(0)
-    factor()
-    print("EXIT <term>\n")
 
 
 def assign():
@@ -401,19 +422,42 @@ def assign():
     global s
     if not s:
         return
-    if s[0] not in ["ID"]:
+    print(s[0])
+    if s[0]!='ID':
+        print("The assign statement should start with an ID.\n")
+        print("However,it starts with {}".format(s[0]))
         error()
-        s = ""
+        return
+    this_id = s[1]
+    s.pop(0)
+    s.pop(0)
+    if this_id not in type_dic:
+        error()
+        print('ID : {} not defined'.format(this_id))
+        return 
+    if type_dic[this_id]=='Bool':
+        if not s:
+            print("Wrong code. Here requires a bool variable or statement")
+            error()
+            return
+        print('\n\n\n\n')
+        print(s)
+        if s[0]!='=':
+            print("lacking = for assignment")
+            error()
+            return
+        s.pop(0)
+        boolstmt()
+        print("EXIT <assign>\n")
+        return
+
+    if not s or s[0] != "=":
+        error()
+        print("= is required for assignment.")
         return
     s.pop(0)
     if not s:
-        return
-    if s[0] != "=":
         error()
-        s = ""
-        return
-    s.pop(0)
-    if not s:
         return
     term()
     print("EXIT <assign>\n")
@@ -422,146 +466,49 @@ def assign():
 def boolstmt():
     print("ENTER <boolstmt>\n")
     global s
-    if len(s) < 3:
+    print(s[0])
+    if not s:
         error()
         s = ""
+        print("there is no bool statement")
         return
-    if (
-        s[0] in ["ID", "INTEGER", "FLOAT"]
-        and s[1] == "BOOL_OPERATOR"
-        and s[2] in ["ID", "INTEGER", "FLOAT"]
-    ):
+    if s[0] in ['TRUE_CODE','FALSE_CODE']:
+        print('EXIT <boolstmt>\n')
         s.pop(0)
-        s.pop(0)
-        s.pop(0)
-        print("EXIT <boolstmt>\n")
         return
-    else:
-        error()
-        return
-
-
-def whilestmt():
-    print("ENTER <whilestmt>\n")
-    global s
-    s.pop(0)
-    if not s or s[0] != "(":
+    term()
+    if not s or s[0] != "BOOL_OPERATOR":
+        print("need a bool operator here!\n")
         error()
         return
     s.pop(0)
-
-    if not s:
-        error()
-        return
-
-    boolstmt()
-    if not s or s[0] != ")":
-        error()
-        return
-    s.pop(0)
-    if not s:
-        error()
-        return
-    block()
-    print("EXIT <whilestmt>\n")
+    term()  
+    print("EXIT <boolstmt>\n")
+    return  
 
 
-def forstmt():
-    print("ENTER <forstmt>\n")
-    global s
-    s.pop(0)
-
-    if not s or s[0] != "(":
-        error()
-        return
-
-    s.pop(0)  # (
-    if not s or s[0] != "ID":
-        error()
-        return
-    s.pop(0)  # (
-
-    if not s or s[0] != ";":
-        error()
-        return
-    s.pop(0)
-    boolstmt()
-    if not s or s[0] != ";":
-        error()
-        return
-    s.pop(0)
-    assign()
-    if not s or s[0] != ")":
-        error()
-        return
-    s.pop(0)  # )
-    block()
-    print("EXIT <forstmt>\n")
-
-
-def ifstmt():
-    print("ENTER <ifstmt>\n")
-    global s
-    if s[0] == "IF_CODE":
-        s.pop(0)
-        if not s or s[0] != "(":
-            error()
-            return
-        s.pop(0)
-        boolstmt()
-        if not s or s[0] != ")":
-            error()
-            return
-        s.pop(0)
-        block()
-        if s:
-            if s[0] != "ELSE_CODE":
-                return
-            if s[0] == "ELSE_CODE":
-                s.pop(0)
-                block()
-    print("EXIT <ifstmt>\n")
-
-
-def dowhilestmt():
-    print("ENTER <dowhile>\n")
-    global s
-    s.pop(0)
-    block()
-    if not s or s[0] != "WHILE_CODE":
-        error()
-        return
-    s.pop(0)
-
-    if not s or s[0] != "(":
-        error()
-        return
-    s.pop(0)
-    if not s:
-        error()
-        return
-    boolstmt()
-    if not s or s[0] != ")":
-        error()
-        return
-    s.pop(0)
-    print("EXIT <dowhile>\n")
-    return
-
-
-def returnstmt():
+def returnstmt(return_type=None):
     print("ENTER <returnstmt>\n")
     global s
-    if s[0] != "RETURN_CODE":
+    if (not s) or (s[0]!='RETURN_CODE'):
+        print('LACK return statement')
         error()
+        return  
+    s.pop(0)  
+    if not return_type:
+        print('EXIT <returnstmt>\n')
         return
-    s.pop(0)
-
+    # do not need a return value
+    if return_type=='VOID_CODE':
+        print('EXIT <returnstmt>\n')
+        return 
+    # need a return value
     if not s:
         error()
         return
-    factor()
+    factor(return_type=return_type)
     print("EXIT <returnstmt>\n")
+    return
 
 
 def error():
@@ -571,28 +518,125 @@ def error():
     s = ""
     print("Error Detected!")
 
+# <function>   ->  def <ID> '('  {<assign>}  ')' '=>' <Type> <block>   # type(<Type>)==type(<factor>)
+def function():
+    print("ENTER <function>\n")
+    global s
+    if not s or s[0] != "DEF_CODE":
+        error()
+        print("'def' is required.")
+        return
+    s.pop(0)
+    if s and s[0]=='static':
+        s.pop(0)
+    if not s or s[0] != "ID":
+        if s:
+            print("Function name should be an ID, should not be : {}".format(s[0]))
+        error()
+        return
+    print(s[0])
+    s.pop(0)
+    if s[0] in type_dic:
+        print("The ID: {} has been declared before.".format(s[0]))
+        error()
+        return
+    s.pop(0)
+    if not s or s[0] != '(':
+        error()
+        print("lacking () for declaring arguments for the function. ")
+        return
+    s.pop(0)
+    if not s:
+        print("( is required for the function arguments.")
+        error()
+        return
+    while s and s[0]!=')':
+        assign()
+    if not s or s[0]!=')':
+        print(") is required for the function arguments.")       
+        error()
+        return 
+    s.pop(0)   
+
+    if not s or s[0] != "=>":
+        print("=> is required for the function.")              
+        error()
+        return
+    s.pop(0)
+    if not s:
+        print("A return type is required for the function. Choose from Int,Float,String,VOID")              
+        error()
+        return        
+    elif s[0] in ['Int','Float','String','VOID_CODE']:
+        return_type = s[0]
+        s.pop(0)
+    elif s[0]=='ID' and (s[1] in class_vars):
+        return_type = s[1]
+        s.pop(0)
+        s.pop(0)
+    else:
+        print("wrong type of required Return value")              
+        error()
+        return          
+    block(return_type=return_type)   
+    print('EXIT <function>\n')
+    return 
+
+# <staticvar>  ->  static <declarevar> 
+
+def staticvar():
+    print("ENTER <staticvar>\n")
+    if not s or s[0] not in ['Int','Float','VOID_CODE','String']:
+        error()
+        return
+    print(s[0])
+    new_type = s[0]
+    s.pop(0)
+    if not s or s[0]!='ID':
+        error()
+        return
+    new_id = s[1]
+    s.pop(0)
+    s.pop(0)
+    if new_id in type_dic:
+        error()
+        print("ID cannot be declared twice!\n")
+        return
+    type_dic[new_id] = new_type
+    static_vars.append(new_id)
+    print("EXIT <staticvar>\n")
+    return 
+    
 
 def statement():
-    # <statement> --> <ifstmt> | <assign>; | <returnstmt>;|<forstmt>|<foreachstmt>|<dowhilestmt>|<whilestmt>|<switchstmt>
+    # <statement> --> <assign>; | <returnstmt>;|<forstmt>|<foreachstmt>|<dowhilestmt>|<whilestmt>|<switchstmt>
     global s
+    print("ENTER <statement>\n")
     if not s:
+        print("EXIT <statement>\n")
         return
-    if s[0] == "IF_CODE":
-        ifstmt()
-    elif s[0] == "FOR_CODE":
-        forstmt()
-    elif s[0] == "SWITCH_CODE":
-        switchstmt()
-    elif s[0] == "FOREACH_CODE":
-        foreachstmt()
-    elif s[0] == "DO_CODE":
-        dowhilestmt()
-    elif s[0] == "WHILE_CODE":
-        whilestmt()
-    elif s[0] == "RETURN_CODE":
-        returnstmt()
+    print(s[0])
+    if s[0]=='static':
+        s.pop(0)
+        staticvar()
+        print("EXIT <statement>\n")
+        return
+    elif s[0] in ['Int','String','Float','Bool'] or (s[0]=='ID' and (s[1] in class_vars)):
+        declarevar()
+        print("EXIT <statement>\n")
+        return
+    elif s[0]=='CLASS_CODE':
+        classdef()
+        print("EXIT <statement>\n")
+        return
+    elif s[0]=='DEF_CODE':
+        function()
+        print("EXIT <statement>\n")  
+        return
     else:
         assign()
+        print("EXIT <statement>\n")
+        return
 
 
 def syntax_parse():
@@ -614,9 +658,34 @@ def program():
             error()
             return
     s = s[4:]
-    block()
+    block(return_type=None)
     print("Exit <program>\n")
 
+# <classdef>   ->  Class <ID> '{' {assign} {<function>} '}'  
+def classdef():
+    global s
+    if not s or s[0]!='CLASS_CODE':
+        error()
+        return 
+    s.pop(0)
+    if not s or s[0]!='ID':
+        error()
+        return 
+    new_class = s[1]
+    if s[1] in type_dic:
+        print('Class name is already taken.')
+        error()
+        return
+    class_vars.append(new_class)
+    s.pop(0)   
+    s.pop(0)
+    if not s or s[0]!='{':
+        error()
+        print("Class need a <block>")
+        return 
+    block()  
+    print("EXIT <classdef>\n")
+    return
 
 ######################################################################################################
 # Main Program
