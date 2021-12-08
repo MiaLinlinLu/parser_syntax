@@ -1,0 +1,497 @@
+
+
+The tokens are: 
+
+['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 'a', '=', 'INTEGER', 'Float', 'varDeref', 'ID', 'b', 'Bool', 'ID', 'm', 'static', 'Float', 'ID', 'mm', 'ID', 'm', '=', 'ID', 'a', 'BOOL_OPERATOR', 'ID', 'a', 'MATH_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'ID', 'm', '=', 'INTEGER', 'BOOL_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'String', 'ID', 'ss', 'ID', 'ss', '=', 'STRING', 'String', 'ID', 's2', 'ID', 's2', '=', 'STRING', 'String', 'ID', 's3', 'ID', 's3', '=', 'STRING', 'CLASS_CODE', 'ID', 'CAT', '{', 'Int', 'ID', 'e', 'Float', 'varDeref', 'ID', 'gg', 'Bool', 'ID', 'mf', 'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', '=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var', 'RETURN_CODE', '}', ';', 'DEF_CODE', 'ID', 'fun2', '(', ')', '=>', 'ID', 'CAT', '{', 'Int', 'ID', 'g', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var3', 'RETURN_CODE', 'ID', 'var3', '}', ';', 'RETURN_CODE', '}', ';', 'ID', 'CAT', 'ID', 'var12', 'ID', 'var12.e', '=', 'INTEGER', 'ID', 'var12.gg', '=', 'INTEGER', 'ID', 'var12.bb2', '=', 'INTEGER', 'RETURN_CODE', '}', ';']
+
+
+Enter <program>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+Float
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+Bool
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+static
+ENTER <staticvar>
+
+Float
+EXIT <staticvar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <boolstmt>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+ID
+EXIT <factor>
+
+EXIT <term>
+
+ENTER <term>
+
+ENTER <factor>
+
+ID
+EXIT <factor>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <boolstmt>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <boolstmt>
+
+INTEGER
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <boolstmt>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+String
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+STRING
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+String
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+STRING
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+String
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+STRING
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+CLASS_CODE
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+Float
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+Bool
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+DEF_CODE
+ENTER <function>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+varDeref
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+EXIT <returnstmt>
+
+EXIT <block>
+
+EXIT <function>
+
+EXIT <statement>
+
+ENTER <statement>
+
+DEF_CODE
+ENTER <function>
+
+ID
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+varDeref
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+ENTER <factor>
+
+EXIT <factor>
+
+EXIT <returnstmt>
+
+EXIT <block>
+
+EXIT <function>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+EXIT <returnstmt>
+
+EXIT <block>
+
+EXIT <classdef>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+EXIT <returnstmt>
+
+EXIT <block>
+
+Exit <program>
+
+
+
+----------all variables types are:---------------
+{'a': 'Int', 'b': 'Float', 'm': 'Bool', 'mm': 'Float', 'ss': 'String', 's2': 'String', 's3': 'String', 'e': 'Int', 'gg': 'Float', 'mf': 'Bool', 'c': 'Int', 'var': 'CAT', 'g': 'Int', 'var3': 'CAT', 'var12': 'CAT', 'var12.e': 'class_deref', 'var12.gg': 'class_deref', 'var12.bb2': 'class_deref'}
+
+
+----------all Class variables are:---------------
+['CAT']
+
+
+----------all defined Class names and their [variables] and [methods] are:---------------
+{'CAT': [['e', 'gg', 'mf'], ['bb2', 'fun2']]}
+
+
+----------all Function arguments are:---------------
+{'bb2': ['e'], 'fun2': []}
+
+
+----------all Static vars and functions are:---------------
+['mm']
+No Syntax Error Detected.
