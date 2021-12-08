@@ -44,7 +44,8 @@ define lists/dics.
 type_dic = {}    # {id:type}
 static_vars = [] # [id]
 class_vars = []  #[class1,class2,...]
-
+class_dic = {}   #{class_name:[[vars_list],[methods_list]]}
+function_dic = {} # {function_name:[arg_list]}
 
 """
 lexical analyzer 
@@ -243,6 +244,8 @@ def block(return_type=None):
     """
          <block> --> "{" {<statement>} "}" “;”
     """
+    vars_list = []
+    methods_list = []
     print("Enter <block>\n")
     global s
     if (not s) or (s[0] != "{"):
@@ -250,7 +253,9 @@ def block(return_type=None):
         return
     s.pop(0)
     while s and (s[0] not in ["}","RETURN_CODE"]):
-        statement()
+        a_list,b_list = statement()
+        vars_list += a_list
+        methods_list += b_list
 
     returnstmt(return_type = return_type)
 
@@ -258,7 +263,7 @@ def block(return_type=None):
         s.pop(0)
         s.pop(0)
         print("EXIT <block>\n")
-        return
+        return vars_list,methods_list
     else:
         error()
         return
@@ -289,7 +294,17 @@ def factor(return_type=None):
             s.pop(0)
             s.pop(0)
             s.pop(0)
-            return            
+            return 
+        elif s[0]=='ID' and ('.' in s[0]):
+            tempz = s[0].split('.')   
+            if len(tempz)==2:
+                classname,varmethod = tempz
+                if (classname in class_dic) and (varmethod in class_dic[classname][0]+class_dic[classname][1]):
+                    s.pop(0)
+                    s.pop(0)
+                    print("EXIT <factor>\n")
+                    return
+
         error()
         print("wrong type of factor")
         return
@@ -364,6 +379,9 @@ def factor(return_type=None):
 # <declarevar> ->  <Types> <ID>
 # <voidtype>   ->  <VOID> 
 def declarevar():
+    '''
+    return [new_id list],[new_method list]
+    '''
     print("ENTER <declarevar>\n")
     global s
     if not s:
@@ -398,7 +416,7 @@ def declarevar():
         return
     type_dic[new_id] = new_type
     print("EXIT <declarevar>\n")
-    return 
+    return [new_id],[]
 
 # term: factor | factor +-*/% factor
 def term():
@@ -431,7 +449,24 @@ def assign():
     this_id = s[1]
     s.pop(0)
     s.pop(0)
-    if this_id not in type_dic:
+    if '.' in this_id:
+        tempz = this_id.split('.')   
+        if len(tempz)==2:
+            classname,varmethod = tempz
+            print(classname)
+            print(class_vars)
+            print(type_dic)
+            if not ((classname in type_dic) and (type_dic[classname] in class_vars) and (varmethod in class_dic[type_dic[classname]][0]+class_dic[type_dic[classname]][1])):
+                error()
+                print("wrong id")
+                return
+            else:
+                type_dic[this_id] = 'class_deref'
+        else:
+            error()
+            print("wrong id provided")
+            return
+    elif this_id not in type_dic:
         error()
         print('ID : {} not defined'.format(this_id))
         return 
@@ -449,7 +484,7 @@ def assign():
         s.pop(0)
         boolstmt()
         print("EXIT <assign>\n")
-        return
+        return [this_id],[]
 
     if not s or s[0] != "=":
         error()
@@ -461,6 +496,7 @@ def assign():
         return
     term()
     print("EXIT <assign>\n")
+    return [this_id],[]
 
 
 def boolstmt():
@@ -521,6 +557,7 @@ def error():
 # <function>   ->  def <ID> '('  {<assign>}  ')' '=>' <Type> <block>   # type(<Type>)==type(<factor>)
 def function():
     print("ENTER <function>\n")
+    fun_args = []
     global s
     if not s or s[0] != "DEF_CODE":
         error()
@@ -536,6 +573,7 @@ def function():
         return
     print(s[0])
     s.pop(0)
+    function_name = s[0]
     if s[0] in type_dic:
         print("The ID: {} has been declared before.".format(s[0]))
         error()
@@ -551,7 +589,8 @@ def function():
         error()
         return
     while s and s[0]!=')':
-        assign()
+        a_list,_ = assign()
+        fun_args += a_list
     if not s or s[0]!=')':
         print(") is required for the function arguments.")       
         error()
@@ -580,7 +619,9 @@ def function():
         return          
     block(return_type=return_type)   
     print('EXIT <function>\n')
-    return 
+    function_dic[function_name] = fun_args
+    print(function_dic)
+    return [],[function_name]
 
 # <staticvar>  ->  static <declarevar> 
 
@@ -605,7 +646,7 @@ def staticvar():
     type_dic[new_id] = new_type
     static_vars.append(new_id)
     print("EXIT <staticvar>\n")
-    return 
+    return [new_id],[]
     
 
 def statement():
@@ -618,25 +659,25 @@ def statement():
     print(s[0])
     if s[0]=='static':
         s.pop(0)
-        staticvar()
+        var_list,method_list = staticvar()
         print("EXIT <statement>\n")
-        return
+        return var_list,method_list
     elif s[0] in ['Int','String','Float','Bool'] or (s[0]=='ID' and (s[1] in class_vars)):
-        declarevar()
+        var_list,method_list = declarevar()
         print("EXIT <statement>\n")
-        return
+        return var_list,method_list
     elif s[0]=='CLASS_CODE':
-        classdef()
+        var_list,method_list =classdef()
         print("EXIT <statement>\n")
-        return
+        return var_list,method_list
     elif s[0]=='DEF_CODE':
-        function()
+        var_list,method_list = function()
         print("EXIT <statement>\n")  
-        return
+        return var_list,method_list
     else:
         assign()
         print("EXIT <statement>\n")
-        return
+        return [],[]
 
 
 def syntax_parse():
@@ -683,9 +724,11 @@ def classdef():
         error()
         print("Class need a <block>")
         return 
-    block()  
+    vars_list, methods_list = block()  
     print("EXIT <classdef>\n")
-    return
+    class_dic[new_class]=[vars_list,methods_list]
+    print(class_dic)
+    return vars_list,methods_list
 
 ######################################################################################################
 # Main Program
@@ -694,5 +737,15 @@ s = lexical_parse(f.read())
 if s:
     syntax_flag = 1
     syntax_parse()
+    print('\n\n----------all variables types are:---------------')
+    print(type_dic)
+    print('\n\n----------all Class variables are:---------------')
+    print(class_vars)
+    print('\n\n----------all defined Class names and their [variables] and [methods] are:---------------')
+    print(class_dic)
+    print('\n\n----------all Function arguments are:---------------')
+    print(function_dic)    
+    print('\n\n----------all Static vars and functions are:---------------')
+    print(static_vars)      
     if syntax_flag:
         print("No Syntax Error Detected.")

@@ -16,7 +16,7 @@ VOID MAIN () {
         Int e 
         Float *gg
         Bool mf
-        def static bb2()=> VOID {
+        def static bb2(e=3)=> VOID {
             Int c
             c = *b
             CAT var
@@ -26,10 +26,14 @@ VOID MAIN () {
             Int g
             c = *b
             CAT var3
-            return var
+            return var3
         };
         return 
     };
+    CAT var12
+    var12.e = 3
+    var12.gg = 4
+    var12.bb2= 4
     return
 };
     
