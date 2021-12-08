@@ -36,7 +36,12 @@
 # <staticvar>  ->  static <declarevar> 
 # <declarevar> ->  <Types> <ID>
 # <voidtype>   ->  <VOID> 
- 
+'''
+save terminal log to a file.
+'''
+import sys
+f = open('parse_result.log','a')
+sys.stdout = f
 
 '''
 define lists/dics.
@@ -278,7 +283,6 @@ def factor(return_type=None):
         error()
         return
     if not return_type:
-        print('\n\n\n\n\n\n\n')
         print(s[0])
         if s[0] in ["INTEGER", "FLOAT","STRING","BOOL"]:
             print("EXIT <factor>\n")
@@ -453,9 +457,6 @@ def assign():
         tempz = this_id.split('.')   
         if len(tempz)==2:
             classname,varmethod = tempz
-            print(classname)
-            print(class_vars)
-            print(type_dic)
             if not ((classname in type_dic) and (type_dic[classname] in class_vars) and (varmethod in class_dic[type_dic[classname]][0]+class_dic[type_dic[classname]][1])):
                 error()
                 print("wrong id")
@@ -475,8 +476,6 @@ def assign():
             print("Wrong code. Here requires a bool variable or statement")
             error()
             return
-        print('\n\n\n\n')
-        print(s)
         if s[0]!='=':
             print("lacking = for assignment")
             error()
@@ -620,7 +619,6 @@ def function():
     block(return_type=return_type)   
     print('EXIT <function>\n')
     function_dic[function_name] = fun_args
-    print(function_dic)
     return [],[function_name]
 
 # <staticvar>  ->  static <declarevar> 
@@ -727,7 +725,6 @@ def classdef():
     vars_list, methods_list = block()  
     print("EXIT <classdef>\n")
     class_dic[new_class]=[vars_list,methods_list]
-    print(class_dic)
     return vars_list,methods_list
 
 ######################################################################################################
