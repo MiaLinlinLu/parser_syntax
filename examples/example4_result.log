@@ -1,0 +1,108 @@
+
+
+The tokens are: 
+
+['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 'a', '=', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'CLASS_CODE', 'ID', 'CAT', '{', 'Int', 'ID', 'e', 'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', '=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'RETURN_CODE', 'INTEGER', '}', ';', 'RETURN_CODE', '}', ';']
+
+
+Enter <program>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+CLASS_CODE
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+DEF_CODE
+ENTER <function>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+EXIT <returnstmt>
+
+Error Detected!
+EXIT <function>
+
+EXIT <statement>
+
+ENTER <returnstmt>
+
+LACK return statement
+Error Detected!
+Error Detected!

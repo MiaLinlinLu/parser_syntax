@@ -1,0 +1,13 @@
+VOID MAIN () {
+    Int a 
+    a = 3+4*5
+
+ 
+    Class CAT {
+        Int e
+        def static bb2(e=3)=> VOID {
+            Int c
+            return 3
+        };
+    return
+};
