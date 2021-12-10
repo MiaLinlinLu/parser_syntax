@@ -4,10 +4,7 @@
 # if there is lexical error,
 # it will print analzed TOKENS and "LEXICAL ERROR DETECTED".
 
-# If there is no lexical error,
-# it will print TOKENs
 # if no syntax error, "No Syntax Error"
-# if syntax error, "Error Detected"
 
 # Tested functions:
 # while,if,for,foreach,term,factor,return,bool,dowhile
