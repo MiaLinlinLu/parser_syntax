@@ -2,7 +2,23 @@
 
 The tokens are: 
 
-['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 'a', '=', 'INTEGER', 'Float', 'varDeref', 'ID', 'b', 'Bool', 'ID', 'm', 'static', 'Float', 'ID', 'mm', 'ID', 'm', '=', 'ID', 'a', 'BOOL_OPERATOR', 'ID', 'a', 'MATH_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'ID', 'm', '=', 'INTEGER', 'BOOL_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 'INTEGER', 'String', 'ID', 'ss', 'ID', 'ss', '=', 'STRING', 'String', 'ID', 's2', 'ID', 's2', '=', 'STRING', 'String', 'ID', 's3', 'ID', 's3', '=', 'STRING', 'CLASS_CODE', 'ID', 'CAT', '{', 'Int', 'ID', 'e', 'Float', 'varDeref', 'ID', 'gg', 'Bool', 'ID', 'mf', 'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', '=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var', 'RETURN_CODE', '}', ';', 'DEF_CODE', 'ID', 'fun2', '(', ')', '=>', 'ID', 'CAT', '{', 'Int', 'ID', 'g', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var3', 'RETURN_CODE', 'ID', 'var3', '}', ';', 'RETURN_CODE', '}', ';', 'ID', 'CAT', 'ID', 'var12', 'ID', 'var12.e', '=', 'INTEGER', 'ID', 'var12.gg', '=', 'INTEGER', 'ID', 'var12.bb2', '=', 'INTEGER', 'RETURN_CODE', '}', ';']
+['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 
+'a', '=', 'INTEGER', 'Float', 'varDeref', 'ID', 'b', 'Bool', 'ID', 
+'m', 'static', 'Float', 'ID', 'mm', 'ID', 'm', '=', 'ID', 'a', 
+'BOOL_OPERATOR', 'ID', 'a', 'MATH_OPERATOR', 'INTEGER', 'MATH_OPERATOR', 
+'INTEGER', 'ID', 'm', '=', 'INTEGER', 'BOOL_OPERATOR', 'INTEGER', 
+'MATH_OPERATOR', 'INTEGER', 'String', 'ID', 'ss', 'ID', 'ss', '=', 
+'STRING', 'String', 'ID', 's2', 'ID', 's2', '=', 'STRING', 'String', 
+'ID', 's3', 'ID', 's3', '=', 'STRING', 'CLASS_CODE', 'ID', 'CAT', '{', 
+'Int', 'ID', 'e', 'Float', 'varDeref', 'ID', 'gg', 'Bool', 'ID', 'mf', 
+'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', 
+'=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'ID', 'c', '=', 'varDeref', 
+'ID', 'b', 'ID', 'CAT', 'ID', 'var', 'RETURN_CODE', '}', ';', 'DEF_CODE', 
+'ID', 'fun2', '(', ')', '=>', 'ID', 'CAT', '{', 'Int', 'ID', 'g', 'ID', 
+'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var3', 'RETURN_CODE', 
+'ID', 'var3', '}', ';', 'RETURN_CODE', '}', ';', 'ID', 'CAT', 'ID', 'var12', 
+'ID', 'var12.e', '=', 'INTEGER', 'ID', 'var12.gg', '=', 'INTEGER', 'ID', 
+'var12.bb2', '=', 'INTEGER', 'RETURN_CODE', '}', ';']
 
 
 Enter <program>

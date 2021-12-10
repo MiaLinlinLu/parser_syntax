@@ -1,3 +1,27 @@
+# grammars:
+# <program>    ->  VOID MAIN () <block> ";"
+# <block>      ->'{' {<statement>}  <returnstmt> '}'
+# <classdef>   ->  Class <ID> '{'{<function>|<statement>} '}'   
+# <function>   ->  def <ID> '('  {<assign>|<factor>}  ')' '=>' <Type>  <block>  
+# <statement>   --> <staticvar> | <declarevar> |  <assign> |  <classdef> | <function>
+# <returntypes>  --> 'Int'|'String'|'VOID'|'Float'|'Bool'|<Class>
+# <returnstmt> --> return {<factor>}
+
+# <assign>    --> <ID> = <term> | <boolstmt>
+# <term>      --> <factor> { ( '+' | '-' | '*' | '/' | '%') <factor> }
+# <factor>    --> identifier | int | float | string| <varDeref>
+# <boolstmt>   --> TRUE_CODE | FALSE_CODE | (<term> (">"|"<"|"==") <term>)
+
+# <staticvar>  ->  static <declarevar> 
+# <declarevar> ->  <Types> <ID>
+
+# <voidtype>   ->  <VOID> 
+# <String>       -->  ''  //using single quotes
+# <int>          -->  0| ((1|2|3|4|5|6|7|8|9){0|1|2|3|4|5|6|7|8|9})
+# <Float>        --> <int>"."<int>
+# <Bool>         --> <boolstmt>
+# <varDeref>     --> '*'<ID>
+
 """
 Syntax analyzer 
 """

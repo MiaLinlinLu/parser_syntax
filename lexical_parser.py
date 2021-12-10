@@ -1,4 +1,6 @@
-# define DELIMITER
+
+
+# define DELIMITERa
 def isDelimiter(ch):
     this_s = " +-=*/><(:){;}=%'"
     if ch in list(this_s) + ["\t", "\n"]:
