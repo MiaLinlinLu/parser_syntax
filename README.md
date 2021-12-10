@@ -14,10 +14,10 @@ Lexical Parser and Syntactical Parser.
  
         write a program starts with VOID MAIN ()
 
- 2. Run the `python parser.py` or `python3 Parser.py` in your terminal.
+ 2. Run the `python semantic_analyzer.py` or `python3 semantic_analyzer.py` in your terminal.
 
- 3. The result will show in `parse_result.log` file.
+ 3. The result will show in { example_filename+'_result.log'}  file.
 
 # Examples
 
-Please see an Output example in `parse_result.log` 
+Please see examples in `examples` file folder.

@@ -1,44 +1,31 @@
-######################################################################################################
-###  Usage.
-# read from "program.txt",
-# if there is lexical error,
-# it will print analzed TOKENS and "LEXICAL ERROR DETECTED".
-
-# if no syntax error, "No Syntax Error"
-
-# Tested functions:
-# while,if,for,foreach,term,factor,return,bool,dowhile
-
-
-######################################################################################################
 # grammars:
 # <program>    ->  VOID MAIN () <block> ";"
 # <block>      ->'{' {<statement>}  <returnstmt> '}'
 # <classdef>   ->  Class <ID> '{'{<function>|<statement>} '}'   
-# <function>   ->  def <ID> '('  {<assign>|<factor>}  ')' '=>' <Type> '{' <block> return <factor>  '}'   #type(<Type>)==type(<factor>)
+# <function>   ->  def <ID> '('  {<assign>|<factor>}  ')' '=>' <Type>  <block>  
 # <statement>   --> <staticvar> | <declarevar> |  <assign> |  <classdef> | <function>
-# <returntypes>  --> 'Int'|'String'|'VOID'|'Float'|<Class>
+# <returntypes>  --> 'Int'|'String'|'VOID'|'Float'|'Bool'|<Class>
 # <returnstmt> --> return {<factor>}
 
 # <assign>    --> <ID> = <term> | <boolstmt>
 # <term>      --> <factor> { ( '+' | '-' | '*' | '/' | '%') <factor> }
-# <factor>    --> identifier | int | float | <varDeref>
+# <factor>    --> identifier | int | float | string| <varDeref>
 # <boolstmt>   --> TRUE_CODE | FALSE_CODE | (<term> (">"|"<"|"==") <term>)
 
+# <staticvar>  ->  static <declarevar> 
+# <declarevar> ->  <Types> <ID>
+
+# <voidtype>   ->  <VOID> 
 # <String>       -->  ''  //using single quotes
 # <int>          -->  0| ((1|2|3|4|5|6|7|8|9){0|1|2|3|4|5|6|7|8|9})
 # <Float>        --> <int>"."<int>
-
+# <Bool>         --> <boolstmt>
 # <varDeref>     --> '*'<ID>
-# <staticvar>  ->  static <declarevar> 
-# <declarevar> ->  <Types> <ID>
-# <voidtype>   ->  <VOID> 
-'''
-save terminal log to a file.
-'''
-import sys
-f = open('parse_result.log','a')
-sys.stdout = f
+
+"""
+Syntax analyzer 
+"""
+import lexical_parser as lex
 
 '''
 define lists/dics.
@@ -49,198 +36,6 @@ class_vars = []  #[class1,class2,...]
 class_dic = {}   #{class_name:[[vars_list],[methods_list]]}
 function_dic = {} # {function_name:[arg_list]}
 
-"""
-lexical analyzer 
-"""
-
-# define DELIMITER
-def isDelimiter(ch):
-    this_s = " +-=*/><(:){;}=%'"
-    if ch in list(this_s) + ["\t", "\n"]:
-        return True
-    return False
-
-def isString(ch):
-    if ch[0]=="'" and ch[-1]=="'":
-        return True
-    return False
-
-# define OPERATOR
-def isMathOperator(ch):
-    this_s = "+-/*%"
-    if ch in list(this_s):
-        return True
-    return False
-
-
-# define BOOL OPERATOR
-def isBoolOperator(ch):
-    if ch in [">", "<"]:
-        return True
-    return False
-
-
-# valid IDENTIFIER
-def is_valid_identifier(s):
-    this_s = "0123456789+-=*/><()[,]{;}"
-    if s[0] in list(this_s):
-        return False
-    return True
-
-
-# INTEGER
-def is_integer(s):
-    if not s:
-        return False
-    this_s1 = "123456789"
-    this_s = "0123456789"
-    if s == "0":
-        return True
-    # Other numbers
-    if s[0] in list(this_s1):
-        if len(s) > 1:
-            for i in s[1:]:
-                if i not in list(this_s):
-                    return False
-            return True
-        if len(s) == 1:
-            return True
-    if s[0] == "-":
-        if len(s) == 1:
-            return False
-        else:
-            for i in s[1:]:
-                if i not in list(this_s):
-                    return False
-            return True
-    return False
-
-
-# FLOAT NUMBER
-def is_float(s):
-    n = len(s)
-    flag = 0
-    this_s = "0123456789."
-    if not n:
-        return False
-    for i in range(n):
-        if (s[i] not in list(this_s)) or (s[i] == "-" and i > 0):
-            return False
-        if s[i] == ".":
-            flag += 1
-    if flag == 1:
-        return True
-    return False
-
-
-# PARSING STRING
-key_words_dic = {
-    "if": "IF_CODE",
-    "else": "ELSE_CODE",
-    "switch": "SWITCH_CODE",
-    "case": "CASE_CODE",
-    "foreach": "FOREACH_CODE",
-    "return": "RETURN_CODE",
-    "do": "DO_CODE",
-    "for": "FOR_CODE",
-    "while": "WHILE_CODE",
-    "VOID": "VOID_CODE",
-    "MAIN": "MAIN_CODE",
-    "Class":"CLASS_CODE",
-    "def":"DEF_CODE",
-    "true":"TRUE_CODE",
-    "false":"FALSE_CODE"
-}
-
-
-def lexical_error():
-    print("LEXICAL ERROR DETECTED.")
-
-
-def lexical_parse(s):
-    """
-    return RESULT:[] --> a list of tokens.
-    """
-    left = 0
-    right = 0
-    n = len(s)
-
-    result = []
-
-    while right < n and left <= right:
-        if not isDelimiter(s[right]):
-            right += 1
-
-        if left == right and isDelimiter(s[right]):
-            if s[right] not in [" ", "\t", "\n"]:
-                if isMathOperator(s[right]):
-                    result.append("MATH_OPERATOR")
-                elif isBoolOperator(s[right]):
-                    if result and result[-1]=='=':
-                        result[-1] = '=>'
-                    else:
-                        result.append("BOOL_OPERATOR")
-                else:
-                    if s[right]=='=':
-                        if result and result[-1]=='=':
-                            result[-1]= 'BOOL_OPERATOR'
-                        else:
-                            result.append('=')
-                    elif s[right]=="'":
-                        right += 1
-                        left += 1
-                        while right<n and s[right]!="'":
-                            right += 1
-                            left += 1
-                        if right==n:
-                            lexical_error()
-                            print("Need an ' for the string.")
-                            return 
-                        result.append('STRING')
-                    else:
-                        result.append(s[right])
-            right += 1
-            left += 1
-
-        if (right == n and left != right) or (left != right and isDelimiter(s[right])):
-            subs = s[left:right]
-            if subs in key_words_dic:
-                result.append(key_words_dic[subs])
-
-            elif is_integer(subs):
-                result.append("INTEGER")
-            elif is_float(subs):
-                result.append("FLOAT")
-            elif is_valid_identifier(subs) and not isDelimiter(s[right - 1]):
-                if left>0 and s[left-1]=='*':
-                    result[-1]= "varDeref"
-                    result.append('ID')
-                    result.append(subs)
-                else:
-                    if subs in ['Int','Float','String','VOID','Bool','static']:
-                        result.append(subs)
-                    else:
-                        result.append("ID")
-                        result.append(subs)
-            else:
-                print("\nThe analyzed tokens are: \n")
-                print(result)
-                print("\n")
-                print("{} could not be identified\n".format(subs))
-                lexical_error()
-                return 0
-            left = right
-
-    print("\n\nThe tokens are: \n")
-    print(result)
-    print("\n")
-    return result
-
-
-######################################################################################################
-"""
-Syntax analyzer 
-"""
 
 def block(return_type=None):
     """
@@ -347,38 +142,8 @@ def factor(return_type=None):
             print("wrong return type")
             error()
             return
-    #     else:
-    #         print("EXIT <factor>\n")
-    #         return 
-    # elif s[0]=='ID':
-    #     if s[1] not in type_dic:
-    #         print("undefined ID: {}".format(s[1]))
-    #         error()
-    #         return 
-    #     else:
-    #         if return_type:
-    #             if type_dic[s[1]]==return_type:
-    #                 s.pop(0)
-    #                 s.pop(0)
-    #                 print("EXIT <factor>\n")
-    #                 return               
-    #             else:
-    #                 print("The return type should be {}, not {}".format(return_type,type_dic[s[1]]))
-    #                 error()
-    #                 return    
-    #         else:
-    #             s.pop(0)
-    #             s.pop(0)
-    #             print("EXIT <factor>\n")
-    #             return       
-    # else:
-    #     print('Invalid factor')
-    #     error()
-    #     return
 
-# <staticvar>  ->  static <declarevar> 
-# <declarevar> ->  <Types> <ID>
-# <voidtype>   ->  <VOID> 
+
 def declarevar():
     '''
     return [new_id list],[new_method list]
@@ -727,7 +492,7 @@ def classdef():
 ######################################################################################################
 # Main Program
 f = open("program.txt", "r")
-s = lexical_parse(f.read())
+s = lex.lexical_parse(f.read())
 if s:
     syntax_flag = 1
     syntax_parse()

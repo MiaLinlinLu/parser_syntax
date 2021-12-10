@@ -1,0 +1,104 @@
+
+
+The tokens are: 
+
+['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 'a', '=', 'INTEGER', 'CLASS_CODE', 'ID', 'CAT', '{', 'Int', 'ID', 'a', 'Float', 'varDeref', 'ID', 'gg', 'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', '=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var', 'RETURN_CODE', '}', ';', 'DEF_CODE', 'ID', 'fun2', '(', ')', '=>', 'ID', 'CAT', '{', 'Int', 'ID', 'g', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var3', 'RETURN_CODE', 'ID', 'var3', '}', ';', 'RETURN_CODE', '}', ';', 'ID', 'CAT', 'ID', 'var12', 'ID', 'var12.e', '=', 'INTEGER', 'ID', 'var12.gg', '=', 'INTEGER', 'ID', 'var12.bb2', '=', 'INTEGER', 'RETURN_CODE', '}', ';']
+
+
+Enter <program>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+CLASS_CODE
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+Error Detected!
+ID: a cannot be declared twice!
+
+
+
+The tokens are: 
+
+['VOID_CODE', 'MAIN_CODE', '(', ')', '{', 'Int', 'ID', 'a', 'ID', 'a', '=', 'INTEGER', 'CLASS_CODE', 'ID', 'CAT', '{', 'Int', 'ID', 'a', 'Float', 'varDeref', 'ID', 'gg', 'DEF_CODE', 'static', 'ID', 'bb2', '(', 'ID', 'e', '=', 'INTEGER', ')', '=>', 'VOID_CODE', '{', 'Int', 'ID', 'c', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var', 'RETURN_CODE', '}', ';', 'DEF_CODE', 'ID', 'fun2', '(', ')', '=>', 'ID', 'CAT', '{', 'Int', 'ID', 'g', 'ID', 'c', '=', 'varDeref', 'ID', 'b', 'ID', 'CAT', 'ID', 'var3', 'RETURN_CODE', 'ID', 'var3', '}', ';', 'RETURN_CODE', '}', ';', 'ID', 'CAT', 'ID', 'var12', 'ID', 'var12.e', '=', 'INTEGER', 'ID', 'var12.gg', '=', 'INTEGER', 'ID', 'var12.bb2', '=', 'INTEGER', 'RETURN_CODE', '}', ';']
+
+
+Enter <program>
+
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+EXIT <declarevar>
+
+EXIT <statement>
+
+ENTER <statement>
+
+ID
+ENTER <assign>
+
+ID
+ENTER <term>
+
+ENTER <factor>
+
+INTEGER
+EXIT <factor>
+
+EXIT <term>
+
+EXIT <assign>
+
+EXIT <statement>
+
+ENTER <statement>
+
+CLASS_CODE
+Enter <block>
+
+ENTER <statement>
+
+Int
+ENTER <declarevar>
+
+Error Detected!
+ID: a cannot be declared twice!
+
